@@ -103,11 +103,11 @@ def compile_strikethrough(line):
     if end == -1:
         return line
     return (
-        line[:start]
-        + '<ins>'
-        + line[start + 2:end]
-        + '</ins>'
-        + line[end + 2:]
+        line[:start] +
+        '<ins>' +
+        line[start + 2:end] +
+        '</ins>' +
+        line[end + 2:]
     )
 
 
@@ -133,11 +133,11 @@ def compile_bold_stars(line):
     if end == -1:
         return line
     return (
-        line[:start]
-        + '<b>'
-        + line[start + 2:end]
-        + '</b>'
-        + line[end + 2:]
+        line[:start] +
+        '<b>' +
+        line[start + 2:end] +
+        '</b>' +
+        line[end + 2:]
     )
 
 
@@ -163,11 +163,11 @@ def compile_bold_underscore(line):
     if end == -1:
         return line
     return (
-        line[:start]
-        + '<b>'
-        + line[start + 2:end]
-        + '</b>'
-        + line[end + 2:]
+        line[:start] +
+        '<b>' +
+        line[start + 2:end] +
+        '</b>' +
+        line[end + 2:]
     )
 
 
@@ -239,9 +239,9 @@ def compile_links(line):
     text = line[bracket_open + 1:bracket_close]
     url = line[paren_open + 1:paren_close]
     return (
-        line[:bracket_open]
-        + f'<a href="{url}">{text}</a>'
-        + line[paren_close + 1:]
+        line[:bracket_open] +
+        f'<a href="{url}">{text}</a>' +
+        line[paren_close + 1:]
     )
 
 
@@ -272,7 +272,7 @@ def compile_images(line):
     alt = line[bracket_open + 1:bracket_close]
     src = line[paren_open + 1:paren_close]
     return (
-        line[:exclaim]
-        + f'<img src="{src}" alt="{alt}" />'
-        + line[paren_close + 1:]
+        line[:exclaim] +
+        f'<img src="{src}" alt="{alt}" />' +
+        line[paren_close + 1:]
     )
