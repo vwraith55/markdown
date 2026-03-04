@@ -26,7 +26,7 @@ def compile_headers(line):
     for level in range(6, 0, -1):
         prefix = '#' * level
         if line[:level] == prefix and (
-            len(line) == level or line[level] != '#'
+                len(line) == level or line[level] != '#'
         ):
             rest = line[level:]
             return f'<h{level}>{rest}</h{level}>'
@@ -54,7 +54,8 @@ def compile_italic_star(line):
     end = line.find('*', start + 1)
     if end == -1:
         return line
-    return line[:start] + '<i>' + line[start + 1:end] + '</i>' + line[end + 1:]
+    return (line[:start] + '<i>' + line[start + 1:end] + '</i>' +
+        line[end + 1:])
 
 
 def compile_italic_underscore(line):
@@ -78,7 +79,8 @@ def compile_italic_underscore(line):
     end = line.find('_', start + 1)
     if end == -1:
         return line
-    return line[:start] + '<i>' + line[start + 1:end] + '</i>' + line[end + 1:]
+    return (line[:start] + '<i>' + line[start + 1:end] + '</i>' +
+        line[end + 1:])
 
 
 def compile_strikethrough(line):
@@ -102,13 +104,8 @@ def compile_strikethrough(line):
     end = line.find('~~', start + 2)
     if end == -1:
         return line
-    return (
-        line[:start] +
-        '<ins>' +
-        line[start + 2:end] +
-        '</ins>' +
-        line[end + 2:]
-    )
+    return (line[:start] + '<ins>' + line[start + 2:end] + '</ins>' +
+        line[end + 2:])
 
 
 def compile_bold_stars(line):
@@ -132,13 +129,8 @@ def compile_bold_stars(line):
     end = line.find('**', start + 2)
     if end == -1:
         return line
-    return (
-        line[:start] +
-        '<b>' +
-        line[start + 2:end] +
-        '</b>' +
-        line[end + 2:]
-    )
+    return (line[:start] + '<b>' + line[start + 2:end] + '</b>' +
+        line[end + 2:])
 
 
 def compile_bold_underscore(line):
@@ -162,13 +154,8 @@ def compile_bold_underscore(line):
     end = line.find('__', start + 2)
     if end == -1:
         return line
-    return (
-        line[:start] +
-        '<b>' +
-        line[start + 2:end] +
-        '</b>' +
-        line[end + 2:]
-    )
+    return (line[:start] + '<b>' + line[start + 2:end] + '</b>' +
+        line[end + 2:])
 
 
 def compile_code_inline(line):
@@ -238,11 +225,8 @@ def compile_links(line):
         return line
     text = line[bracket_open + 1:bracket_close]
     url = line[paren_open + 1:paren_close]
-    return (
-        line[:bracket_open] +
-        f'<a href="{url}">{text}</a>' +
-        line[paren_close + 1:]
-    )
+    return (line[:bracket_open] + f'<a href="{url}">{text}</a>' +
+        line[paren_close + 1:])
 
 
 def compile_images(line):
@@ -271,8 +255,5 @@ def compile_images(line):
         return line
     alt = line[bracket_open + 1:bracket_close]
     src = line[paren_open + 1:paren_close]
-    return (
-        line[:exclaim] +
-        f'<img src="{src}" alt="{alt}" />' +
-        line[paren_close + 1:]
-    )
+    return (line[:exclaim] + f'<img src="{src}" alt="{alt}" />' +
+        line[paren_close + 1:])

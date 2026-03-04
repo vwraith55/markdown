@@ -25,7 +25,7 @@ The more complex functions below cannot be solved by current AI tools.
 If you use AI as a crutch to solve the simple problems for you,
 you will not be able to solve the more difficult problems.
 '''
-from markdown_compiler import *
+from markdown_compiler import convert_file
 
 
 def main():
