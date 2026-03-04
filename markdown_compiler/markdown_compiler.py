@@ -38,7 +38,10 @@ def compile_inline(text):
     '<strong>bold</strong> and <em>italic</em>'
     '''
     # Images must come before links (same syntax but with leading !)
-    text = re.sub(r'!\[([^\]]*)\]\(([^)]*)\)', r'<img src="\2" alt="\1"/>', text)
+    text = re.sub(
+    r'!\[([^\]]*)\]\(([^)]*)\)',
+    r'<img src="\2" alt="\1"/>',
+    text)
 
     # Links
     text = re.sub(r'\[([^\]]*)\]\(([^)]*)\)', r'<a href="\2">\1</a>', text)
@@ -99,13 +102,15 @@ def compile_lines(lines):
     def flush_ol():
         nonlocal html, ol_items
         if ol_items:
-            html += '<ol>' + ''.join(f'<li>{item}</li>' for item in ol_items) + '</ol>'
+            items = ''.join(f'<li>{item}</li>' for item in ol_items)
+            html += '<ol>' + items + '</ol>'
             ol_items = []
 
     def flush_ul():
         nonlocal html, ul_items
         if ul_items:
-            html += '<ul>' + ''.join(f'<li>{item}</li>' for item in ul_items) + '</ul>'
+            items = ''.join(f'<li>{item}</li>' for item in ul_items)
+            html += '<ul>' + items + '</ul>'
             ul_items = []
 
     while i < len(lines):
