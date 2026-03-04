@@ -1,15 +1,12 @@
 '''
-Each of the functions in this file takes a single line of input and transforms the line in some way.
+Each of the functions in this file takes a single line of input
+and transforms the line in some way.
 '''
+
 
 def compile_headers(line):
     '''
     Convert markdown headers into <h1>,<h2>,etc tags.
-
-    HINT:
-    This is the simplest function to implement in this assignment.
-    Use a slices to extract the first part of the line,
-    then use if statements to check if they match the appropriate header markdown commands.
 
     >>> compile_headers('# This is the main header')
     '<h1> This is the main header</h1>'
@@ -26,18 +23,19 @@ def compile_headers(line):
     >>> compile_headers('      # this is not a header')
     '      # this is not a header'
     '''
+    for level in range(6, 0, -1):
+        prefix = '#' * level
+        if line[:level] == prefix and (
+            len(line) == level or line[level] != '#'
+        ):
+            rest = line[level:]
+            return f'<h{level}>{rest}</h{level}>'
     return line
 
 
 def compile_italic_star(line):
     '''
     Convert "*italic*" into "<i>italic</i>".
-
-    HINT:
-    Italics require carefully tracking the beginning and ending positions of the text to be replaced.
-    This is similar to the `delete_HTML` function that we implemented in class.
-    It's a tiny bit more complicated since we are not just deleting substrings from the text,
-    but also adding replacement substrings.
 
     >>> compile_italic_star('*This is italic!* This is not italic.')
     '<i>This is italic!</i> This is not italic.'
@@ -50,15 +48,18 @@ def compile_italic_star(line):
     >>> compile_italic_star('*')
     '*'
     '''
-    return line
+    start = line.find('*')
+    if start == -1:
+        return line
+    end = line.find('*', start + 1)
+    if end == -1:
+        return line
+    return line[:start] + '<i>' + line[start+1:end] + '</i>' + line[end+1:]
 
 
 def compile_italic_underscore(line):
     '''
     Convert "_italic_" into "<i>italic</i>".
-
-    HINT:
-    This function is almost exactly the same as `compile_italic_star`.
 
     >>> compile_italic_underscore('_This is italic!_ This is not italic.')
     '<i>This is italic!</i> This is not italic.'
@@ -71,17 +72,18 @@ def compile_italic_underscore(line):
     >>> compile_italic_underscore('_')
     '_'
     '''
-    return line
+    start = line.find('_')
+    if start == -1:
+        return line
+    end = line.find('_', start + 1)
+    if end == -1:
+        return line
+    return line[:start] + '<i>' + line[start+1:end] + '</i>' + line[end+1:]
 
 
 def compile_strikethrough(line):
     '''
     Convert "~~strikethrough~~" to "<ins>strikethrough</ins>".
-
-    HINT:
-    The strikethrough annotations are very similar to implement as the italic function.
-    The difference is that there are two delimiting characters instead of one.
-    This will require carefully thinking about the range of your for loop and all of your list indexing.
 
     >>> compile_strikethrough('~~This is strikethrough!~~ This is not strikethrough.')
     '<ins>This is strikethrough!</ins> This is not strikethrough.'
@@ -94,15 +96,24 @@ def compile_strikethrough(line):
     >>> compile_strikethrough('~~')
     '~~'
     '''
-    return line
+    start = line.find('~~')
+    if start == -1:
+        return line
+    end = line.find('~~', start + 2)
+    if end == -1:
+        return line
+    return (
+        line[:start]
+        + '<ins>'
+        + line[start+2:end]
+        + '</ins>'
+        + line[end+2:]
+    )
 
 
 def compile_bold_stars(line):
     '''
     Convert "**bold**" to "<b>bold</b>".
-
-    HINT:
-    This function is similar to the strikethrough function.
 
     >>> compile_bold_stars('**This is bold!** This is not bold.')
     '<b>This is bold!</b> This is not bold.'
@@ -115,15 +126,24 @@ def compile_bold_stars(line):
     >>> compile_bold_stars('**')
     '**'
     '''
-    return line
+    start = line.find('**')
+    if start == -1:
+        return line
+    end = line.find('**', start + 2)
+    if end == -1:
+        return line
+    return (
+        line[:start]
+        + '<b>'
+        + line[start+2:end]
+        + '</b>'
+        + line[end+2:]
+    )
 
 
 def compile_bold_underscore(line):
     '''
     Convert "__bold__" to "<b>bold</b>".
-
-    HINT:
-    This function is similar to the strikethrough function.
 
     >>> compile_bold_underscore('__This is bold!__ This is not bold.')
     '<b>This is bold!</b> This is not bold.'
@@ -136,18 +156,24 @@ def compile_bold_underscore(line):
     >>> compile_bold_underscore('__')
     '__'
     '''
-    return line
+    start = line.find('__')
+    if start == -1:
+        return line
+    end = line.find('__', start + 2)
+    if end == -1:
+        return line
+    return (
+        line[:start]
+        + '<b>'
+        + line[start+2:end]
+        + '</b>'
+        + line[end+2:]
+    )
 
 
 def compile_code_inline(line):
     '''
     Add <code> tags.
-
-    HINT:
-    This function is like the italics functions because inline code uses only a single character as a delimiter.
-    It is more complex, however, because inline code blocks can contain valid HTML inside of them,
-    but we do not want that HTML to get rendered as HTML.
-    Therefore, we must convert the `<` and `>` signs into `&lt;` and `&gt;` respectively.
 
     >>> compile_code_inline('You can use backticks like this (`1+2`) to include code in the middle of text.')
     'You can use backticks like this (<code>1+2</code>) to include code in the middle of text.'
@@ -166,16 +192,23 @@ def compile_code_inline(line):
     >>> compile_code_inline('```python3')
     '```python3'
     '''
-    return line
+    start = line.find('`')
+    if start == -1:
+        return line
+    # skip triple backticks (code blocks)
+    if line[start:start+3] == '```':
+        return line
+    end = line.find('`', start + 1)
+    if end == -1:
+        return line
+    inner = line[start+1:end]
+    inner = inner.replace('<', '&lt;').replace('>', '&gt;')
+    return line[:start] + '<code>' + inner + '</code>' + line[end+1:]
 
 
 def compile_links(line):
     '''
     Add <a> tags.
-
-    HINT:
-    The links and images are potentially more complicated because they have many types of delimeters: `[]()`.
-    These delimiters are not symmetric, however, so we can more easily find the start and stop locations using the strings find function.
 
     >>> compile_links('Click on the [course webpage](https://github.com/mikeizbicki/cmc-csci040)!')
     'Click on the <a href="https://github.com/mikeizbicki/cmc-csci040">course webpage</a>!'
@@ -186,17 +219,35 @@ def compile_links(line):
     >>> compile_links('this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040')
     'this is wrong: [course webpage](https://github.com/mikeizbicki/cmc-csci040'
     '''
-    return line
+    # must not be an image (no leading !)
+    bracket_open = line.find('[')
+    if bracket_open == -1:
+        return line
+    # images have ! before [
+    if bracket_open > 0 and line[bracket_open - 1] == '!':
+        return line
+    bracket_close = line.find(']', bracket_open)
+    if bracket_close == -1:
+        return line
+    # paren must immediately follow ]
+    if bracket_close + 1 >= len(line) or line[bracket_close + 1] != '(':
+        return line
+    paren_open = bracket_close + 1
+    paren_close = line.find(')', paren_open)
+    if paren_close == -1:
+        return line
+    text = line[bracket_open+1:bracket_close]
+    url = line[paren_open+1:paren_close]
+    return (
+        line[:bracket_open]
+        + f'<a href="{url}">{text}</a>'
+        + line[paren_close+1:]
+    )
 
 
 def compile_images(line):
     '''
     Add <img> tags.
-
-    HINT:
-    Images are formatted in markdown almost exactly the same as links,
-    except that images have a leading `!`.
-    So your code here should be based off of the <a> tag code.
 
     >>> compile_images('[Mike Izbicki](https://avatars1.githubusercontent.com/u/1052630?v=2&s=460)')
     '[Mike Izbicki](https://avatars1.githubusercontent.com/u/1052630?v=2&s=460)'
@@ -205,4 +256,23 @@ def compile_images(line):
     >>> compile_images('This is an image of Mike Izbicki: ![Mike Izbicki](https://avatars1.githubusercontent.com/u/1052630?v=2&s=460)')
     'This is an image of Mike Izbicki: <img src="https://avatars1.githubusercontent.com/u/1052630?v=2&s=460" alt="Mike Izbicki" />'
     '''
-    return line
+    exclaim = line.find('![')
+    if exclaim == -1:
+        return line
+    bracket_open = exclaim + 1
+    bracket_close = line.find(']', bracket_open)
+    if bracket_close == -1:
+        return line
+    if bracket_close + 1 >= len(line) or line[bracket_close + 1] != '(':
+        return line
+    paren_open = bracket_close + 1
+    paren_close = line.find(')', paren_open)
+    if paren_close == -1:
+        return line
+    alt = line[bracket_open+1:bracket_close]
+    src = line[paren_open+1:paren_close]
+    return (
+        line[:exclaim]
+        + f'<img src="{src}" alt="{alt}" />'
+        + line[paren_close+1:]
+    )
