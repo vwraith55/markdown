@@ -55,8 +55,8 @@ def compile_italic_star(line):
     if end == -1:
         return line
     return_result = line[:start] + '<i>' + line[start + 1:end]
-    return_result += + '</i>' + line[end + 1:]
-    return return_result
+    return_result += '</i>' + line[end + 1:]
+    return (return_result)
 
 
 def compile_italic_underscore(line):
@@ -81,8 +81,8 @@ def compile_italic_underscore(line):
     if end == -1:
         return line
     return_result = line[:start] + '<i>' + line[start + 1:end]
-    return_result += + '</i>' + line[end + 1:]
-    return return_result
+    return_result += '</i>' + line[end + 1:]
+    return (return_result)
 
 
 def compile_strikethrough(line):
@@ -108,7 +108,7 @@ def compile_strikethrough(line):
         return line
     return_result = line[:start] + '<ins>' + line[start + 2:end]
     return_result += '</ins>' + line[end + 2:]
-    return return_result
+    return (return_result)
 
 
 def compile_bold_stars(line):
@@ -134,7 +134,7 @@ def compile_bold_stars(line):
         return line
     return_result = line[:start] + '<b>' + line[start + 2:end]
     return_result += '</b>' + line[end + 2:]
-    return return_result
+    return (return_result)
 
 
 def compile_bold_underscore(line):
@@ -160,7 +160,7 @@ def compile_bold_underscore(line):
         return line
     return_result = line[:start] + '<b>' + line[start + 2:end]
     return_result += '</b>' + line[end + 2:]
-    return return_result
+    return (return_result)
 
 
 def compile_code_inline(line):
@@ -232,7 +232,7 @@ def compile_links(line):
     url = line[paren_open + 1:paren_close]
     return_result = line[:bracket_open] + f'<a href="{url}">{text}</a>'
     return_result += line[paren_close + 1:]
-    return return_result
+    return (return_result)
 
 
 def compile_images(line):
@@ -263,4 +263,4 @@ def compile_images(line):
     src = line[paren_open + 1:paren_close]
     return_result = line[:exclaim] + f'<img src="{src}" alt="{alt}" />'
     return_result += line[paren_close + 1:]
-    return return_result
+    return (return_result)
