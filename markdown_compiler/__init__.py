@@ -225,5 +225,5 @@ def convert_file(input_file, add_css):
     html = markdown_to_html(markdown, add_css)
     html = minify(html)
 
-    with open(input_file[:-2]+'html', 'w') as f:
+    with open(input_file[:-2] + 'html', 'w') as f:
         f.write(html)

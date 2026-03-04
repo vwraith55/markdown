@@ -54,7 +54,7 @@ def compile_italic_star(line):
     end = line.find('*', start + 1)
     if end == -1:
         return line
-    return line[:start] + '<i>' + line[start+1:end] + '</i>' + line[end+1:]
+    return line[:start] + '<i>' + line[start + 1:end] + '</i>' + line[end + 1:]
 
 
 def compile_italic_underscore(line):
@@ -78,7 +78,7 @@ def compile_italic_underscore(line):
     end = line.find('_', start + 1)
     if end == -1:
         return line
-    return line[:start] + '<i>' + line[start+1:end] + '</i>' + line[end+1:]
+    return line[:start] + '<i>' + line[start + 1:end] + '</i>' + line[end + 1:]
 
 
 def compile_strikethrough(line):
@@ -105,9 +105,9 @@ def compile_strikethrough(line):
     return (
         line[:start]
         + '<ins>'
-        + line[start+2:end]
+        + line[start + 2:end]
         + '</ins>'
-        + line[end+2:]
+        + line[end + 2:]
     )
 
 
@@ -135,9 +135,9 @@ def compile_bold_stars(line):
     return (
         line[:start]
         + '<b>'
-        + line[start+2:end]
+        + line[start + 2:end]
         + '</b>'
-        + line[end+2:]
+        + line[end + 2:]
     )
 
 
@@ -165,9 +165,9 @@ def compile_bold_underscore(line):
     return (
         line[:start]
         + '<b>'
-        + line[start+2:end]
+        + line[start + 2:end]
         + '</b>'
-        + line[end+2:]
+        + line[end + 2:]
     )
 
 
@@ -196,14 +196,14 @@ def compile_code_inline(line):
     if start == -1:
         return line
     # skip triple backticks (code blocks)
-    if line[start:start+3] == '```':
+    if line[start:start+ 3] == '```':
         return line
     end = line.find('`', start + 1)
     if end == -1:
         return line
-    inner = line[start+1:end]
+    inner = line[start + 1:end]
     inner = inner.replace('<', '&lt;').replace('>', '&gt;')
-    return line[:start] + '<code>' + inner + '</code>' + line[end+1:]
+    return line[:start] + '<code>' + inner + '</code>' + line[end + 1:]
 
 
 def compile_links(line):
@@ -236,12 +236,12 @@ def compile_links(line):
     paren_close = line.find(')', paren_open)
     if paren_close == -1:
         return line
-    text = line[bracket_open+1:bracket_close]
-    url = line[paren_open+1:paren_close]
+    text = line[bracket_open + 1:bracket_close]
+    url = line[paren_open + 1:paren_close]
     return (
         line[:bracket_open]
         + f'<a href="{url}">{text}</a>'
-        + line[paren_close+1:]
+        + line[paren_close + 1:]
     )
 
 
@@ -269,10 +269,10 @@ def compile_images(line):
     paren_close = line.find(')', paren_open)
     if paren_close == -1:
         return line
-    alt = line[bracket_open+1:bracket_close]
-    src = line[paren_open+1:paren_close]
+    alt = line[bracket_open + 1:bracket_close]
+    src = line[paren_open + 1:paren_close]
     return (
         line[:exclaim]
         + f'<img src="{src}" alt="{alt}" />'
-        + line[paren_close+1:]
+        + line[paren_close + 1:]
     )
