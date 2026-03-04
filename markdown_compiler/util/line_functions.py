@@ -196,7 +196,7 @@ def compile_code_inline(line):
     if start == -1:
         return line
     # skip triple backticks (code blocks)
-    if line[start:start+ 3] == '```':
+    if line[start:start + 3] == '```':
         return line
     end = line.find('`', start + 1)
     if end == -1:
